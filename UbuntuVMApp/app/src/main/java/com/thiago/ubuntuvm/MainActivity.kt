@@ -1,4 +1,4 @@
-package com.ubuntu.vmmanager
+package com.thiago.ubuntuvm
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
@@ -14,6 +14,7 @@ import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
@@ -129,7 +130,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupOnBackPressed() {
-        onBackPressedDispatcher.addCallback(this, object : androidx.activity.OnBackPressedCallback(true) {
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 if (webView.canGoBack()) {
                     webView.goBack()
