@@ -51,6 +51,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         loadVnc()
+        setupOnBackPressed()
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -127,11 +128,15 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onBackPressed() {
-        if (webView.canGoBack()) {
-            webView.goBack()
-        } else {
-            super.onBackPressed()
-        }
+    private fun setupOnBackPressed() {
+        onBackPressedDispatcher.addCallback(this, object : androidx.activity.OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (webView.canGoBack()) {
+                    webView.goBack()
+                } else {
+                    finish()
+                }
+            }
+        })
     }
 }
