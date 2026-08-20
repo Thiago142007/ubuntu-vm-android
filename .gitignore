@@ -1,0 +1,18 @@
+# QEMU files & Disks
+*.qcow2
+*.iso
+*.img
+*.pid
+*.log
+QEMU_EFI.fd
+vm_config.json
+
+# Android & Gradle
+.gradle/
+build/
+app/build/
+*.apk
+.idea/
+*.iml
+local.properties
+.DS_Store
