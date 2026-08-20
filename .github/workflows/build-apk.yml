@@ -40,3 +40,9 @@ jobs:
       with:
         name: UbuntuVMApp-debug.apk
         path: bin/UbuntuVMApp-debug.apk
+
+    - name: Upload APK to GitHub Release
+      run: |
+        gh release upload v1.0.0 bin/UbuntuVMApp-debug.apk --clobber
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
