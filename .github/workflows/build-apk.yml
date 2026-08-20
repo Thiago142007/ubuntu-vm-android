@@ -29,8 +29,26 @@ jobs:
       run: ./gradlew assembleDebug --stacktrace
       working-directory: UbuntuVMApp
 
+    - name: Find and copy APK
+      run: |
+        mkdir -p bin
+        find UbuntuVMApp -name "*.apk" -exec cp {} bin/UbuntuVMApp-debug.apk \;
+        ls -la bin/
+
     - name: Upload Debug APK Artifact
       uses: actions/upload-artifact@v4
       with:
         name: UbuntuVMApp-debug.apk
-        path: UbuntuVMApp/app/build/outputs/apk/debug/*.apk
+        path: bin/UbuntuVMApp-debug.apk
+
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v2
+      if: github.ref == 'refs/heads/main'
+      with:
+        tag_name: v1.0.0
+        name: Release v1.0.0 - Ubuntu VM Android App
+        draft: false
+        prerelease: false
+        files: bin/UbuntuVMApp-debug.apk
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
