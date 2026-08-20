@@ -4,15 +4,15 @@ plugins {
 }
 
 android {
-    namespace 'com.thiago.ubuntuvm'
+    namespace 'com.thiagovm.ubuntu'
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.thiago.ubuntuvm"
+        applicationId "com.thiagovm.ubuntu"
         minSdk 26
         targetSdk 34
-        versionCode 2
-        versionName "1.0.1"
+        versionCode 3
+        versionName "1.0.2"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

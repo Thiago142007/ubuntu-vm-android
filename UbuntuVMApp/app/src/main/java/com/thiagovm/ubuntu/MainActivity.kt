@@ -1,4 +1,4 @@
-package com.thiago.ubuntuvm
+package com.thiagovm.ubuntu
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
