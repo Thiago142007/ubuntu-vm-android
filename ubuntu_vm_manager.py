@@ -53,29 +53,20 @@ def check_dependencies():
     config = load_config()
     arch = config["arch"]
     
-    needed_pkgs = ["wget", "net-tools"]
     qemu_cmd = f"qemu-system-{arch}"
     
-    if shutil.which(qemu_cmd) is None:
-        needed_pkgs.append(f"qemu-system-{arch}")
-    if shutil.which("qemu-img") is None:
-        needed_pkgs.append("qemu-utils")
-    if shutil.which("novnc") is None and shutil.which("websockify") is None:
-        needed_pkgs.append("novnc")
-        needed_pkgs.append("websockify")
+    if shutil.which(qemu_cmd) is None or shutil.which("qemu-img") is None:
+        print("Installing QEMU system and utils via pkg...")
+        subprocess.run(["pkg", "install", "-y", f"qemu-system-{arch}", "qemu-utils", "wget", "net-tools"], check=False)
         
-    if needed_pkgs:
-        print(f"Missing packages: {', '.join(needed_pkgs)}")
-        print("Installing required packages via pkg...")
-        cmd = ["pkg", "install", "-y"] + list(set(needed_pkgs))
-        try:
-            subprocess.run(cmd, check=True)
-            print("Dependencies installed successfully.")
-        except Exception as e:
-            print(f"Error installing packages: {e}")
-            print("Please run manually: pkg install -y qemu-utils qemu-system-aarch64 qemu-system-x86_64 novnc websockify wget")
-    else:
-        print("All dependencies are satisfied.")
+    novnc_dir = "/data/data/com.termux/files/usr/share/novnc"
+    if not os.path.exists(novnc_dir):
+        print("Installing noVNC web files...")
+        subprocess.run(["git", "clone", "https://github.com/novnc/noVNC.git", novnc_dir], check=False)
+
+    if shutil.which("websockify") is None:
+        print("Installing websockify via pip...")
+        subprocess.run([sys.executable, "-m", "pip", "install", "websockify"], check=False)
 
 def ensure_disk():
     config = load_config()
