@@ -35,31 +35,90 @@
             android:textColor="#FFFFFF" />
     </LinearLayout>
 
-    <!-- Controls & Status Bar -->
-    <LinearLayout
+    <!-- Scrollable Control Toolbar -->
+    <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#2D2D2D"
-        android:orientation="horizontal"
-        android:padding="8dp"
-        android:gravity="center_vertical">
+        android:padding="4dp"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <Button
+                android:id="@+id/btnStart"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:text="▶️ Ligar"
+                android:textSize="11sp"
+                android:backgroundTint="#10B981"
+                android:layout_marginEnd="6dp" />
+
+            <Button
+                android:id="@+id/btnRestart"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:text="🔄 Reiniciar"
+                android:textSize="11sp"
+                android:backgroundTint="#3B82F6"
+                android:layout_marginEnd="6dp" />
+
+            <Button
+                android:id="@+id/btnStop"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:text="⏹️ Desligar"
+                android:textSize="11sp"
+                android:backgroundTint="#EF4444"
+                android:layout_marginEnd="6dp" />
+
+            <Button
+                android:id="@+id/btnBios"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:text="⚙️ Menu BIOS"
+                android:textSize="11sp"
+                android:backgroundTint="#8B5CF6"
+                android:layout_marginEnd="6dp" />
+
+            <Button
+                android:id="@+id/btnReload"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:text="🔁 Recarregar"
+                android:textSize="11sp"
+                android:backgroundTint="#6B7280"
+                android:layout_marginEnd="6dp" />
+
+            <Button
+                android:id="@+id/btnFullscreen"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:text="🖥️ Tela Cheia"
+                android:textSize="11sp"
+                android:backgroundTint="#E95420" />
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <!-- Status Bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#1E1E1E"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="4dp">
 
         <TextView
             android:id="@+id/tvStatus"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Status: Conectando a http://localhost:6080/vnc.html"
+            android:text="Status: Conectando..."
             android:textColor="#CCCCCC"
-            android:textSize="12sp" />
-
-        <Button
-            android:id="@+id/btnFullscreen"
-            android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:text="Tela Cheia"
-            android:textSize="11sp"
-            android:backgroundTint="#E95420" />
+            android:textSize="11sp" />
     </LinearLayout>
 
     <!-- Graphical User Interface Container (WebView noVNC Display) -->
@@ -81,5 +140,93 @@
             android:layout_gravity="center"
             android:visibility="visible" />
     </FrameLayout>
+
+    <!-- Bottom On-Screen Navigation & Special Keys Toolbar -->
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#222222"
+        android:padding="4dp"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <Button
+                android:id="@+id/btnKeyUp"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="⬆️ CIMA"
+                android:textSize="11sp"
+                android:backgroundTint="#4B5563"
+                android:layout_marginEnd="4dp" />
+
+            <Button
+                android:id="@+id/btnKeyDown"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="⬇️ BAIXO"
+                android:textSize="11sp"
+                android:backgroundTint="#4B5563"
+                android:layout_marginEnd="4dp" />
+
+            <Button
+                android:id="@+id/btnKeyLeft"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="⬅️ ESQ"
+                android:textSize="11sp"
+                android:backgroundTint="#4B5563"
+                android:layout_marginEnd="4dp" />
+
+            <Button
+                android:id="@+id/btnKeyRight"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="➡️ DIR"
+                android:textSize="11sp"
+                android:backgroundTint="#4B5563"
+                android:layout_marginEnd="4dp" />
+
+            <Button
+                android:id="@+id/btnKeyEnter"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="↵ ENTER"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:backgroundTint="#10B981"
+                android:layout_marginEnd="4dp" />
+
+            <Button
+                android:id="@+id/btnKeyTab"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="⇥ TAB"
+                android:textSize="11sp"
+                android:backgroundTint="#6366F1"
+                android:layout_marginEnd="4dp" />
+
+            <Button
+                android:id="@+id/btnKeyEsc"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="⎋ ESC"
+                android:textSize="11sp"
+                android:backgroundTint="#EF4444"
+                android:layout_marginEnd="4dp" />
+
+            <Button
+                android:id="@+id/btnKeyKeyboard"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="⌨️ Teclado"
+                android:textSize="11sp"
+                android:backgroundTint="#F59E0B" />
+        </LinearLayout>
+    </HorizontalScrollView>
 
 </LinearLayout>

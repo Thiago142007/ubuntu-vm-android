@@ -24,6 +24,18 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tvStatus: TextView
     private lateinit var btnReload: Button
     private lateinit var btnFullscreen: Button
+    private lateinit var btnStart: Button
+    private lateinit var btnRestart: Button
+    private lateinit var btnStop: Button
+    private lateinit var btnBios: Button
+    private lateinit var btnKeyUp: Button
+    private lateinit var btnKeyDown: Button
+    private lateinit var btnKeyLeft: Button
+    private lateinit var btnKeyRight: Button
+    private lateinit var btnKeyEnter: Button
+    private lateinit var btnKeyTab: Button
+    private lateinit var btnKeyEsc: Button
+    private lateinit var btnKeyKeyboard: Button
 
     private val vncUrl = "http://127.0.0.1:6080/vnc.html?autoconnect=true&resize=remote"
     private var isFullscreen = false
@@ -38,6 +50,19 @@ class MainActivity : AppCompatActivity() {
         tvStatus = findViewById(R.id.tvStatus)
         btnReload = findViewById(R.id.btnReload)
         btnFullscreen = findViewById(R.id.btnFullscreen)
+        btnStart = findViewById(R.id.btnStart)
+        btnRestart = findViewById(R.id.btnRestart)
+        btnStop = findViewById(R.id.btnStop)
+        btnBios = findViewById(R.id.btnBios)
+
+        btnKeyUp = findViewById(R.id.btnKeyUp)
+        btnKeyDown = findViewById(R.id.btnKeyDown)
+        btnKeyLeft = findViewById(R.id.btnKeyLeft)
+        btnKeyRight = findViewById(R.id.btnKeyRight)
+        btnKeyEnter = findViewById(R.id.btnKeyEnter)
+        btnKeyTab = findViewById(R.id.btnKeyTab)
+        btnKeyEsc = findViewById(R.id.btnKeyEsc)
+        btnKeyKeyboard = findViewById(R.id.btnKeyKeyboard)
 
         setupWebView()
 
@@ -49,6 +74,55 @@ class MainActivity : AppCompatActivity() {
 
         btnFullscreen.setOnClickListener {
             toggleFullscreen()
+        }
+
+        btnStart.setOnClickListener {
+            sendVmApiCommand("start", "Iniciando VM...")
+        }
+
+        btnRestart.setOnClickListener {
+            sendVmApiCommand("restart", "Reiniciando VM...")
+        }
+
+        btnStop.setOnClickListener {
+            sendVmApiCommand("stop", "Desligando VM...")
+        }
+
+        btnBios.setOnClickListener {
+            sendVmApiCommand("bios", "Iniciando VM no modo BIOS...")
+        }
+
+        // Virtual Navigation Keys Listeners
+        btnKeyUp.setOnClickListener {
+            sendVirtualKey("ArrowUp", android.view.KeyEvent.KEYCODE_DPAD_UP)
+        }
+
+        btnKeyDown.setOnClickListener {
+            sendVirtualKey("ArrowDown", android.view.KeyEvent.KEYCODE_DPAD_DOWN)
+        }
+
+        btnKeyLeft.setOnClickListener {
+            sendVirtualKey("ArrowLeft", android.view.KeyEvent.KEYCODE_DPAD_LEFT)
+        }
+
+        btnKeyRight.setOnClickListener {
+            sendVirtualKey("ArrowRight", android.view.KeyEvent.KEYCODE_DPAD_RIGHT)
+        }
+
+        btnKeyEnter.setOnClickListener {
+            sendVirtualKey("Enter", android.view.KeyEvent.KEYCODE_ENTER)
+        }
+
+        btnKeyTab.setOnClickListener {
+            sendVirtualKey("Tab", android.view.KeyEvent.KEYCODE_TAB)
+        }
+
+        btnKeyEsc.setOnClickListener {
+            sendVirtualKey("Escape", android.view.KeyEvent.KEYCODE_ESCAPE)
+        }
+
+        btnKeyKeyboard.setOnClickListener {
+            showSoftwareKeyboard()
         }
 
         loadVnc()
@@ -139,5 +213,57 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         })
+    }
+
+    private fun sendVirtualKey(keyName: String, keyCode: Int) {
+        val downEvent = android.view.KeyEvent(android.view.KeyEvent.ACTION_DOWN, keyCode)
+        val upEvent = android.view.KeyEvent(android.view.KeyEvent.ACTION_UP, keyCode)
+        webView.dispatchKeyEvent(downEvent)
+        webView.dispatchKeyEvent(upEvent)
+
+        val js = """
+            (function() {
+                var target = document.querySelector('canvas') || document.body;
+                var evtDown = new KeyboardEvent('keydown', {key: '$keyName', code: '$keyName', keyCode: $keyCode, which: $keyCode, bubbles: true});
+                var evtUp = new KeyboardEvent('keyup', {key: '$keyName', code: '$keyName', keyCode: $keyCode, which: $keyCode, bubbles: true});
+                target.dispatchEvent(evtDown);
+                target.dispatchEvent(evtUp);
+            })();
+        """.trimIndent()
+        webView.evaluateJavascript(js, null)
+    }
+
+    private fun showSoftwareKeyboard() {
+        val imm = getSystemService(INPUT_METHOD_SERVICE) as? android.view.inputmethod.InputMethodManager
+        webView.requestFocus()
+        imm?.showSoftInput(webView, android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT)
+        webView.evaluateJavascript("if (window.UI && UI.toggleKeyboard) { UI.toggleKeyboard(); }", null)
+    }
+
+    private fun sendVmApiCommand(action: String, statusMsg: String) {
+        tvStatus.text = "Status: $statusMsg"
+        progressBar.visibility = View.VISIBLE
+        Thread {
+            try {
+                val url = java.net.URL("http://127.0.0.1:6081/api/$action")
+                val connection = url.openConnection() as java.net.HttpURLConnection
+                connection.connectTimeout = 3000
+                connection.readTimeout = 3000
+                connection.requestMethod = "GET"
+                val responseCode = connection.responseCode
+                connection.disconnect()
+                runOnUiThread {
+                    Toast.makeText(this, "Comando '$action' enviado ($responseCode)", Toast.LENGTH_SHORT).show()
+                    webView.postDelayed({
+                        webView.reload()
+                    }, 2000)
+                }
+            } catch (e: Exception) {
+                runOnUiThread {
+                    Toast.makeText(this, "Erro API VM: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
+                    progressBar.visibility = View.GONE
+                }
+            }
+        }.start()
     }
 }

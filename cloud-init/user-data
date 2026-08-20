@@ -1,0 +1,34 @@
+#cloud-config
+ssh_pwauth: True
+chpasswd:
+  list: |
+    ubuntu:ubuntu
+    root:ubuntu
+  expire: False
+
+users:
+  - name: ubuntu
+    gecos: Ubuntu User
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    groups: users, admin, sudo
+    shell: /bin/bash
+    lock_passwd: False
+
+package_update: true
+packages:
+  - xfce4
+  - xfce4-goodies
+  - lightdm
+  - xorg
+  - dbus-x11
+
+write_files:
+  - path: /etc/lightdm/lightdm.conf.d/50-autologin.conf
+    content: |
+      [Seat:*]
+      autologin-user=ubuntu
+      autologin-user-timeout=0
+
+runcmd:
+  - systemctl set-default graphical.target
+  - systemctl start lightdm

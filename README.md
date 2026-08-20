@@ -18,7 +18,7 @@ Você pode baixar o arquivo **`.apk`** gerado automaticamente após a compilaç�
 
 ## 🛠️ Arquivos e Estrutura do Projeto
 
-* `ubuntu_vm_manager.py`: Gerenciador interativo Python para alocação de RAM/CPU, criação de disco e controle de servidores VNC/noVNC.
+* `ubuntu_vm_manager.py`: Gerenciador interativo Python para alocação de RAM/CPU, aceleração KVM hardware auto-detectada, download de ISOs (Ubuntu/Alpine) e controle de servidores VNC/noVNC.
 * `setup.sh`: Script de instalação rápida de dependências (`qemu-system-aarch64`, `novnc`, `websockify`).
 * `UbuntuVMApp/`: Projeto completo em Kotlin/Gradle com WebView noVNC integrado, controles e modo tela cheia.
 * `.github/workflows/build-apk.yml`: Workflow para compilar o APK automaticamente na nuvem.
@@ -35,9 +35,16 @@ cd ubuntu-vm-android
 # 2. Instalar dependências
 ./setup.sh
 
-# 3. Iniciar a Máquina Virtual Ubuntu
+# 3. Baixar uma ISO de Instalação (Ubuntu Server/Desktop ou Alpine)
+python3 ubuntu_vm_manager.py download-iso
+
+# 4. Iniciar a Máquina Virtual Ubuntu
 python3 ubuntu_vm_manager.py menu
 ```
+
+### ⚡ Aceleração Hardware (KVM)
+
+O gerenciador detecta automaticamente se o dispositivo Android suporta **KVM** (`/dev/kvm`). Se disponível, a VM rodará com aceleração nativa de hardware (`-enable-kvm -cpu host`).
 
 ### 🖥️ Acessar a Interface Gráfica
 

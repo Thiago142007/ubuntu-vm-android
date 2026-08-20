@@ -6,6 +6,7 @@
 *.log
 QEMU_EFI.fd
 vm_config.json
+kernel/
 
 # Android & Gradle
 .gradle/
